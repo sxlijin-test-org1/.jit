@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: trivy
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: enrichment
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: gitleaks
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -51,12 +51,27 @@ jobs:
         security_control_output_file: /tmp/report.json
         dispatch_type: workflow
 
+  software-component-analysis:
+    if: fromJSON(github.event.inputs.client_payload).payload.workflow_job_name == 'software-component-analysis'
+    runs-on: ubuntu-20.04
+    steps:
+    - name: osv-scanner
+      uses: jitsecurity-controls/jit-github-action@v1.9
+      with:
+        docker_user: jit-bot
+        docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
+        
+        security_control: ghcr.io/jitsecurity-controls/control-osv-scanner-alpine:latest
+        security_control_args: --recursive \${WORK_DIR:-.}
+        
+        dispatch_type: workflow
+
   software-component-analysis-go:
     if: fromJSON(github.event.inputs.client_payload).payload.workflow_job_name == 'software-component-analysis-go'
     runs-on: ubuntu-20.04
     steps:
     - name: nancy
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -71,7 +86,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: npm-audit
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -81,27 +96,12 @@ jobs:
         
         dispatch_type: workflow
 
-  software-component-analysis-python:
-    if: fromJSON(github.event.inputs.client_payload).payload.workflow_job_name == 'software-component-analysis-python'
-    runs-on: ubuntu-20.04
-    steps:
-    - name: dependency-check
-      uses: jitsecurity-controls/jit-github-action@v1.8
-      with:
-        docker_user: jit-bot
-        docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
-        
-        security_control: ghcr.io/jitsecurity-controls/control-dependency-check-alpine:latest
-        security_control_args: --scan \${WORK_DIR:-.} --enableExperimental --disableJar --disableRubygems --disableBundleAudit --disableCocoapodsAnalyzer --disableSwiftPackageManagerAnalyzer --disableSwiftPackageResolvedAnalyzer --disableAutoconf --disableCmake --disableComposer --disableCpan --disableNuspec --disableNugetconf --disableAssembly --disableGolangDep --disableGolangMod --disableNodeJS --disableYarnAudit --disableNodeAudit --format JSON --noupdate --out \$REPORT_FILE --log /code/error.txt
-        security_control_output_file: /tmp/report.json
-        dispatch_type: workflow
-
   static-code-analysis-go:
     if: fromJSON(github.event.inputs.client_payload).payload.workflow_job_name == 'static-code-analysis-go'
     runs-on: ubuntu-20.04
     steps:
     - name: gosec
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: semgrep
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: semgrep
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -146,7 +146,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: bandit
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
@@ -161,7 +161,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: semgrep
-      uses: jitsecurity-controls/jit-github-action@v1.8
+      uses: jitsecurity-controls/jit-github-action@v1.9
       with:
         docker_user: jit-bot
         docker_password: ${{fromJSON(github.event.inputs.client_payload).payload.container_registry_token}}
